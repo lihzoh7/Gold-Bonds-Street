@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reviews</title>
+<style>
+body{margin:0;font-family:Arial;background:#001f3f;color:white;}
+.header{padding:20px;background:#003366;font-weight:bold;}
+.container{padding:20px;text-align:center;}
+.box{
+  background:#0a2540;
+  padding:20px;
+  border-radius:10px;
+  min-height:150px;
+}
+.nav{
+  display:flex;
+  justify-content:space-between;
+  margin-top:20px;
+}
+button{
+  padding:10px 20px;
+  border:none;
+  border-radius:8px;
+  background:#00c853;
+  color:white;
+}
+</style>
+</head>
+<body>
+
+<div class="header">YOUR REVIEWS</div>
+<div class="container">
+  <div class="box" id="reviewBox">Loading...</div>
+  <div class="nav">
+    <button id="prev">PREV</button>
+    <button id="next">NEXT</button>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getDatabase,ref,get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig={
+ apiKey:"AIzaSyBqJTLjxhZBCsvjrTH_cG0fkXlElG6BqTg",
+ authDomain:"tose-ccf8f.firebaseapp.com",
+ databaseURL:"https://tose-ccf8f-default-rtdb.europe-west1.firebasedatabase.app",
+ projectId:"tose-ccf8f"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+
+let reviews=[];
+let index=0;
+
+function showReview(){
+ if(reviews.length===0){
+   reviewBox.innerText="No reviews yet.";
+   return;
+ }
+ const r=reviews[index];
+ reviewBox.innerHTML=`
+   <div>${r.message}</div>
+   <div style="font-size:12px;color:#aaa;margin-top:10px;">
+     ${new Date(r.timestamp).toLocaleString()}
+   </div>
+ `;
+}
+
+onAuthStateChanged(auth, async user=>{
+ if(!user){window.location.href="index.html";return;}
+
+ const snap=await get(ref(db,"concerns"));
+ const data=snap.val()||{};
+ for(const id in data){
+   if(data[id].uid===user.uid){
+     reviews.push(data[id]);
+   }
+ }
+ reviews.sort((a,b)=>b.timestamp-a.timestamp);
+ showReview();
+});
+
+next.onclick=()=>{ if(index<reviews.length-1){index++;showReview();} }
+prev.onclick=()=>{ if(index>0){index--;showReview();} }
+</script>
+
+</body>
+</html>
