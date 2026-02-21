@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>History</title>
+<style>
+body{margin:0;font-family:Arial;background:#001f3f;color:white;}
+.header{padding:20px;background:#003366;font-weight:bold;}
+.container{padding:20px;}
+.row{
+  background:#0a2540;
+  padding:15px;
+  margin-bottom:10px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+}
+.date{font-size:12px;color:#aaa;}
+</style>
+</head>
+<body>
+
+<div class="header">CLAIM HISTORY</div>
+<div class="container" id="historyList"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getDatabase,ref,get } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBqJTLjxhZBCsvjrTH_cG0fkXlElG6BqTg",
+  authDomain:"tose-ccf8f.firebaseapp.com",
+  databaseURL:"https://tose-ccf8f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"tose-ccf8f"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+
+onAuthStateChanged(auth, async user=>{
+ if(!user){window.location.href="index.html";return;}
+
+ const snap = await get(ref(db,"users/"+user.uid+"/winnings"));
+ const data = snap.val()||{};
+ const list=document.getElementById("historyList");
+
+ let arr=[];
+ for(const id in data){
+   if(data[id].status==="paid"){
+     arr.push(data[id]);
+   }
+ }
+
+ arr.sort((a,b)=>b.wonAt-a.wonAt);
+
+ arr.forEach(win=>{
+   const div=document.createElement("div");
+   div.className="row";
+   div.innerHTML=`
+     <div>
+       ${win.cup.toUpperCase()} - R${win.amount}
+       <div class="date">${new Date(win.wonAt).toLocaleString()}</div>
+     </div>
+     <div>PAID</div>
+   `;
+   list.appendChild(div);
+ });
+});
+</script>
+
+</body>
+</html>
