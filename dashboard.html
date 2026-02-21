@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reward Dashboard</title>
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#001f3f;
+  color:white;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 25px;
+  background:#003366;
+}
+.balance{
+  font-weight:bold;
+  font-size:18px;
+}
+.icons span{
+  font-size:22px;
+  margin-left:15px;
+  cursor:pointer;
+}
+.container{
+  padding:30px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+.card{
+  background:#0a2540;
+  padding:30px;
+  text-align:center;
+  border-radius:15px;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
+  transition:0.2s;
+}
+.card:hover{
+  transform:translateY(-5px);
+}
+.card h3{
+  margin:0;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="balance">BALANCE: R<span id="balance">0</span></div>
+  <div class="icons">
+    <span onclick="window.location.href='concern.html'">🖋</span>
+    <span onclick="window.location.href='reviews.html'">📄</span>
+  </div>
+</div>
+
+<div class="container">
+  <div class="card" onclick="window.location.href='prizes.html'">
+    <h3>PRIZES</h3>
+  </div>
+  <div class="card" onclick="window.location.href='winnings.html'">
+    <h3>WINNINGS</h3>
+  </div>
+  <div class="card" onclick="window.location.href='history.html'">
+    <h3>HISTORY</h3>
+  </div>
+  <div class="card" onclick="window.location.href='bank.html'">
+    <h3>BANK DETAILS</h3>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getDatabase,ref,onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBqJTLjxhZBCsvjrTH_cG0fkXlElG6BqTg",
+  authDomain: "tose-ccf8f.firebaseapp.com",
+  databaseURL: "https://tose-ccf8f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tose-ccf8f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+onAuthStateChanged(auth,user=>{
+  if(!user){window.location.href="index.html";}
+  else{
+    onValue(ref(db,"users/"+user.uid+"/balance"),snap=>{
+      document.getElementById("balance").innerText = snap.val() || 0;
+    });
+  }
+});
+</script>
+
+</body>
+    </html>
