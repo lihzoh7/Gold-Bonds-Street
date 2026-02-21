@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Write</title>
+<style>
+body{margin:0;font-family:Arial;background:#001f3f;color:white;}
+.header{padding:20px;background:#003366;font-weight:bold;}
+.container{padding:20px;}
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-bottom:15px;
+  border:none;
+  border-radius:8px;
+  background:#0a2540;
+  color:white;
+}
+textarea{height:150px;}
+button{
+  width:100%;
+  padding:12px;
+  background:#00c853;
+  border:none;
+  border-radius:8px;
+  color:white;
+  font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="header">WRITE CONCERN</div>
+<div class="container">
+  <input id="name" placeholder="Name">
+  <input id="surname" placeholder="Surname">
+  <textarea id="message" placeholder="Write your concern..."></textarea>
+  <button id="submitBtn">SUBMIT</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+import { getDatabase,ref,push } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyBqJTLjxhZBCsvjrTH_cG0fkXlElG6BqTg",
+  authDomain:"tose-ccf8f.firebaseapp.com",
+  databaseURL:"https://tose-ccf8f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"tose-ccf8f"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+
+onAuthStateChanged(auth,user=>{
+ if(!user){window.location.href="index.html";return;}
+
+ submitBtn.onclick=async()=>{
+   await push(ref(db,"concerns"),{
+     uid:user.uid,
+     name:name.value,
+     surname:surname.value,
+     message:message.value,
+     timestamp:Date.now()
+   });
+   alert("Submitted");
+   name.value=""; surname.value=""; message.value="";
+ }
+});
+</script>
+
+</body>
+  </html>
