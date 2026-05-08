@@ -22,6 +22,7 @@ h1{
 .dayTab{
 
   background:#4da6ff;
+
   color:white;
 
   padding:15px;
@@ -33,15 +34,20 @@ h1{
   cursor:pointer;
 
   font-size:20px;
+
   font-weight:bold;
 
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
 }
 
 .dayContent{
+
   display:none;
+
   margin-top:10px;
 }
 
@@ -63,7 +69,9 @@ h1{
 
   border-radius:10px;
 
-  line-height:1.6;
+  line-height:1.7;
+
+  word-break:break-word;
 }
 
 .totalBar{
@@ -82,15 +90,29 @@ h1{
 
   justify-content:space-between;
 
+  align-items:center;
+
   font-size:20px;
 
   font-weight:bold;
 }
 
 .empty{
+
   text-align:center;
+
   margin-top:50px;
+
   color:#aaa;
+
+  font-size:20px;
+}
+
+.small{
+
+  color:#aaa;
+
+  font-size:14px;
 }
 
 </style>
@@ -114,22 +136,39 @@ import {
 }
 from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
+/* FIREBASE */
+
 const firebaseConfig = {
 
   apiKey: "AIzaSyBqJTLjxhZBCsvjrTH_cG0fkXlElG6BqTg",
+
   authDomain: "tose-ccf8f.firebaseapp.com",
-  databaseURL: "https://tose-ccf8f-default-rtdb.europe-west1.firebasedatabase.app",
+
+  databaseURL:
+  "https://tose-ccf8f-default-rtdb.europe-west1.firebasedatabase.app",
+
   projectId: "tose-ccf8f",
-  storageBucket: "tose-ccf8f.appspot.com",
-  messagingSenderId: "475447495901",
-  appId: "1:475447495901:web:9189276a162a3680afdf34"
+
+  storageBucket:
+  "tose-ccf8f.appspot.com",
+
+  messagingSenderId:
+  "475447495901",
+
+  appId:
+  "1:475447495901:web:9189276a162a3680afdf34"
 };
 
-const app = initializeApp(firebaseConfig);
+const app =
+  initializeApp(firebaseConfig);
 
-const db = getDatabase(app);
+const db =
+  getDatabase(app);
 
-const container = document.getElementById("container");
+const container =
+  document.getElementById("container");
+
+/* LOAD TRANSACTIONS */
 
 onValue(ref(db,"transactions"), snap=>{
 
@@ -137,107 +176,189 @@ onValue(ref(db,"transactions"), snap=>{
 
   container.innerHTML = "";
 
+  /* NO DATA */
+
+  if(Object.keys(data).length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty">
+        No transactions yet
+      </div>
+
+    `;
+
+    return;
+  }
+
+  /* GROUPED BY DAY */
+
   const grouped = {};
 
   Object.values(data).forEach(t=>{
 
-    const date = new Date(t.approvedAt);
+    /* SKIP BAD DATA */
+
+    if(!t) return;
+
+    if(!t.approvedAt) return;
+
+    const date =
+      new Date(Number(t.approvedAt));
+
+    if(isNaN(date.getTime())) return;
 
     const dayKey =
-      date.toLocaleDateString("en-GB",{
-        weekday:"long",
-        day:"2-digit",
-        month:"short",
-        year:"numeric"
-      });
+      date.toLocaleDateString(
+        "en-GB",
+        {
+          weekday:"long",
+          day:"2-digit",
+          month:"short",
+          year:"numeric"
+        }
+      );
 
     if(!grouped[dayKey]){
+
       grouped[dayKey] = [];
     }
 
     grouped[dayKey].push(t);
   });
 
-  const dates = Object.keys(grouped).reverse();
+  const dates =
+    Object.keys(grouped).reverse();
+
+  /* STILL EMPTY */
 
   if(dates.length === 0){
 
-    container.innerHTML =
-    `<div class="empty">
-      No transactions yet
-    </div>`;
+    container.innerHTML = `
+
+      <div class="empty">
+        No valid transactions
+      </div>
+
+    `;
 
     return;
   }
 
+  /* CREATE DAY SECTIONS */
+
   dates.forEach((date,index)=>{
 
-    const transactions = grouped[date];
+    const transactions =
+      grouped[date];
 
     let total = 0;
+
+    /* CALCULATE TOTAL */
 
     transactions.forEach(t=>{
 
       const amount =
+
         Number(
-          String(t.price)
+
+          String(t.price || 0)
           .replace("R","")
-        );
+
+        ) || 0;
 
       total += amount;
     });
 
-    const tab = document.createElement("div");
+    /* TAB */
+
+    const tab =
+      document.createElement("div");
 
     tab.className = "dayTab";
 
     tab.innerHTML = `
+
       <span>${date}</span>
+
       <span>▼</span>
+
     `;
 
-    const content = document.createElement("div");
+    /* CONTENT */
 
-    content.className = "dayContent";
+    const content =
+      document.createElement("div");
+
+    content.className =
+      "dayContent";
 
     content.style.display =
-      index === 0 ? "block" : "none";
+      index === 0
+      ? "block"
+      : "none";
 
-    let cards = `
+    /* CARDS */
+
+    let html = `
+
       <div class="transactionsGrid">
+
     `;
 
     transactions.forEach(t=>{
 
-      cards += `
+      html += `
 
-      <div class="card">
+        <div class="card">
 
-        <b>${t.name} ${t.surname}</b><br>
+          <b>
+            ${t.name || ""}
+            ${t.surname || ""}
+          </b>
 
-        ${t.email}<br><br>
+          <br>
 
-        🧾 ${t.item}<br>
+          ${t.email || "No email"}
 
-        💎 Gems: ${t.gems}<br>
+          <br><br>
 
-        ❤️ Lives: ${t.lives}<br>
+          🧾
+          ${t.item || "No item"}
 
-        👥 Referral: ${t.referral}<br><br>
+          <br>
 
-        <small>
-          ${new Date(t.approvedAt)
-          .toLocaleString()}
-        </small>
+          💎 Gems:
+          ${t.gems || 0}
 
-      </div>
+          <br>
+
+          ❤️ Lives:
+          ${t.lives || 0}
+
+          <br>
+
+          👥 Referral:
+          ${t.referral || "none"}
+
+          <br><br>
+
+          <div class="small">
+
+            ${new Date(
+              Number(t.approvedAt)
+            ).toLocaleString()}
+
+          </div>
+
+        </div>
 
       `;
     });
 
-    cards += `</div>`;
+    html += `
 
-    cards += `
+      </div>
 
       <div class="totalBar">
 
@@ -251,15 +372,22 @@ onValue(ref(db,"transactions"), snap=>{
 
     `;
 
-    content.innerHTML = cards;
+    content.innerHTML = html;
+
+    /* TOGGLE */
 
     tab.onclick = ()=>{
 
       content.style.display =
+
         content.style.display === "none"
+
         ? "block"
+
         : "none";
     };
+
+    /* APPEND */
 
     container.appendChild(tab);
 
