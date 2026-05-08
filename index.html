@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Referral Login</title>
+
+<style>
+
+body{
+  margin:0;
+  background:#0f172a;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:white;
+}
+
+.box{
+  width:320px;
+  background:#1e293b;
+  padding:25px;
+  border-radius:10px;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  background:#38bdf8;
+  border:none;
+  color:white;
+  font-size:16px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+h2{
+  text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h2>Referral Login</h2>
+
+  <input
+    id="username"
+    placeholder="Username"
+  >
+
+  <input
+    id="password"
+    type="password"
+    placeholder="Password"
+  >
+
+  <button onclick="login()">
+    LOGIN
+  </button>
+
+</div>
+
+<script>
+
+const accounts = {
+
+  dos1:{
+    password:"uno1",
+    referral:"gamer1"
+  },
+
+  dos2:{
+    password:"uno2",
+    referral:"gamer2"
+  },
+
+  dos3:{
+    password:"uno3",
+    referral:"gamer3"
+  },
+
+  dos4:{
+    password:"uno4",
+    referral:"gamer4"
+  },
+
+  dos5:{
+    password:"uno5",
+    referral:"gamer5"
+  }
+
+};
+
+window.login = function(){
+
+  const username =
+    document.getElementById("username")
+    .value
+    .trim();
+
+  const password =
+    document.getElementById("password")
+    .value
+    .trim();
+
+  const account =
+    accounts[username];
+
+  if(
+    !account ||
+    account.password !== password
+  ){
+    alert("Invalid login");
+    return;
+  }
+
+  localStorage.setItem(
+    "referral",
+    account.referral
+  );
+
+  location.href =
+    "transactions.html";
+
+};
+
+</script>
+
+</body>
+</html>
