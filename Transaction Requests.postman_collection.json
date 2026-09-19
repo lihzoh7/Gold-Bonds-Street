@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "38aa6b26-d775-4fea-80be-7c29d67626ae",
+		"name": "Transaction Requests",
+		"description": "A collection of transaction requests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39838539",
+		"_collection_link": "https://mm-online.postman.co/workspace/I-am-Lizo-Tose-(Pty)-Ltd~0eb10c17-452a-40d0-9a9d-10831722f7b7/collection/39838539-38aa6b26-d775-4fea-80be-7c29d67626ae?action=share&source=collection_link&creator=39838539"
+	},
+	"item": [
+		{
+			"name": "PING",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is success (200)\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result must be 0\"] = jsonData.result === 0"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthHeader}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/Transactions/Ping/Echo Message",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"Transactions",
+						"Ping",
+						"Echo Message"
+					]
+				},
+				"description": "Pings transactions rest api resource"
+			},
+			"response": []
+		},
+		{
+			"name": "Get",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is success (200)\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result must be 0\"] = jsonData.result === 0"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic TmVkQmFua1NlcnZpY2U6UGFzc3dvcmQ="
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/transactions/Get/aa0351ba-6b15-481e-9350-d0062c0d1bfb",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"transactions",
+						"Get",
+						"aa0351ba-6b15-481e-9350-d0062c0d1bfb"
+					]
+				},
+				"description": "Gets transaction by id."
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Status Faulted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code is success (200)\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Total number of records must be > 0\"] = jsonData.totalNumberOfRecords !== 0"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{AuthHeader}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"searchFilterArgs\": {\r\n    \"startDate\": \"2024-01-01\",\r\n    \"endDate\": \"2024-07-01\",\r\n    \"merchantName\": null,\r\n    \"branchName\": \"{{NameMerchantBranche}}\",\r\n    \"merchantReference\": null,\r\n    \"transactionOutcome\": null,\r\n    \"responseCode\": null,\r\n    \"systemReference\": null,\r\n    \"operator\": \"None\",\r\n    \"operatorToString\": \"None\",\r\n    \"amount\": null,\r\n    \"amountFrom\":null,\r\n    \"amountTo\": null,\r\n    \"status\": \"Faulted\",\r\n    \"recurringPaymentsFilters\": null,\r\n    \"cardSearchFilters\": null,\r\n    \"directBankFilters\": null,\r\n    \"isAdvanced\": true,\r\n    \"searchTerm\": null\r\n    },\r\n  \"pageListArgs\": {\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 40\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/transactions/Search",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"transactions",
+						"Search"
+					]
+				},
+				"description": "Searches for transactions using advanced search"
+			},
+			"response": []
+		},
+		{
+			"name": "Search - All Statuses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code is success (200)\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Total number of records must be > 0\"] = jsonData.totalNumberOfRecords !== 0"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{AuthHeader}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"searchFilterArgs\": {\r\n    \"startDate\": \"2024-01-01\",\r\n    \"endDate\": \"2024-07-01\",\r\n    \"merchantName\": null,\r\n    \"branchName\": \"{{NameMerchantBranche}}\",\r\n    \"merchantReference\": null,\r\n    \"transactionOutcome\": null,\r\n    \"responseCode\": null,\r\n    \"systemReference\": null,\r\n    \"operator\": \"None\",\r\n    \"operatorToString\": \"None\",\r\n    \"amount\": null,\r\n    \"amountFrom\":null,\r\n    \"amountTo\": null,\r\n    \"status\": \"Faulted\",\r\n    \"recurringPaymentsFilters\": null,\r\n    \"cardSearchFilters\": null,\r\n    \"directBankFilters\": null,\r\n    \"isAdvanced\": true,\r\n    \"searchTerm\": null\r\n    },\r\n  \"pageListArgs\": {\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 40\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/transactions/Search",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"transactions",
+						"Search"
+					]
+				},
+				"description": "Searches for transactions using advanced search"
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Advanced Search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"tests[\"Status code is success (200)\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Total number of records must be > 0\"] = jsonData.totalNumberOfRecords !== 0"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{AuthHeader}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"searchFilterArgs\": {\r\n    \"startDate\": null,\r\n    \"endDate\": null,\r\n    \"merchantName\": null,\r\n    \"branchName\": null,\r\n    \"merchantReference\": null,\r\n    \"transactionOutcome\": null,\r\n    \"responseCode\": null,\r\n    \"systemReference\": null,\r\n    \"operator\": \"None\",\r\n    \"operatorToString\": \"None\",\r\n    \"amount\": null,\r\n    \"amountFrom\":null,\r\n    \"amountTo\": null,\r\n    \"status\": null,\r\n    \"ProductFilters\": {\r\n    \t\"RecurringPayments\":\r\n    \t{\r\n    \t\t\"MerchantClientReference\": \"{{MerchantClientReference}}\"\r\n    \t}\r\n    },\r\n    \"SelectedProductType\": \"RecurringPaymentProduct\",\r\n    \"isAdvanced\": true,\r\n    \"searchTerm\": null\r\n    },\r\n  \"pageListArgs\": {\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 40\r\n  }\r\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/transactions/Search",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"transactions",
+						"Search"
+					]
+				},
+				"description": "Searches for transactions using advanced search"
+			},
+			"response": []
+		}
+	]
+}

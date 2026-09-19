@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "1da9649c-5fb1-4f7b-9b14-1ca8564e81ad",
+		"name": "Recon",
+		"description": "The recon service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39838539",
+		"_collection_link": "https://mm-online.postman.co/workspace/I-am-Lizo-Tose-(Pty)-Ltd~0eb10c17-452a-40d0-9a9d-10831722f7b7/collection/39838539-1da9649c-5fb1-4f7b-9b14-1ca8564e81ad?action=share&source=collection_link&creator=39838539"
+	},
+	"item": [
+		{
+			"name": "Ping",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthHeader}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/api/{{version}}/recon/Ping/My custom echo message",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"recon",
+						"Ping",
+						"My custom echo message"
+					]
+				},
+				"description": "Test if the API is available and retrieve the details of this API."
+			},
+			"response": []
+		},
+		{
+			"name": "GetLatestStatusChanges Basic",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "{{AuthHeader}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"searchFilterArgs\": {\r\n    \"startDate\": \"2024-06-01T00:00:00.669Z\",\r\n    \"endDate\": \"2024-07-01T00:00:00.669Z\",\r\n    \"isAdvanced\": false,\r\n    \"searchTerm\": \"a\"\r\n  },\r\n  \"pageListArgs\": {\r\n    \"pageNumber\": 1,\r\n    \"pageSize\": 50\r\n  }\r\n}\r\n\r\n"
+				},
+				"url": {
+					"raw": "{{url}}/api/{{version}}/recon/GetLatestStatusChanges",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"recon",
+						"GetLatestStatusChanges"
+					]
+				},
+				"description": "Submit payment request for e-commerce transaction"
+			},
+			"response": []
+		}
+	]
+}
